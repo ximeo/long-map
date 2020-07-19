@@ -7,9 +7,10 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * This implementation of LongMap is based on using nested arrays as a storage of objects, their indexes are using like
- * keys of map. This implementation method is significantly outperformed by tree-based implementations in terms of speed
- * and memory usage. Therefore, it can only be considered as an alternative.
+ * This implementation of LongMap is based on using nested arrays as a storage of objects, their
+ * indexes are using like keys of map. This implementation method is significantly outperformed by
+ * tree-based implementations in terms of speed and memory usage. Therefore, it can only be
+ * considered as an alternative.
  */
 public class LongMapArraysImpl<V> implements LongMap<V> {
     private Object[][][] dataStorage = new Object[3][][];
