@@ -1,146 +1,170 @@
 package de.comparus.opensource.longmap;
 
+import static junit.framework.TestCase.assertNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import de.comparus.opensource.longmap.model.TestObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertNull;
-import static org.junit.Assert.*;
-
 public class LongMapImplTest {
+    private LongMap<TestObject> testedInstance;
+    private TestObject testObject1;
+    private TestObject testObject2;
+    private TestObject testObject3;
+    private TestObject testObject4;
 
-  private LongMap<TestObject> testedInstance;
+    @Before
+    public void init() {
+        testedInstance = new LongMapImpl<>();
+        testObject1 = new TestObject(1L, "Car");
+        testedInstance.put(testObject1.getId(), testObject1);
+        testObject2 = new TestObject(5L, "Bus");
+        testedInstance.put(testObject2.getId(), testObject2);
+        testObject3 = new TestObject(10L, "Plain");
+        testObject4 = new TestObject(0L, "Boat");
+    }
 
-  private final TestObject testObject3 = new TestObject(10L, "Plain");
-  private final TestObject testObject4 = new TestObject(100L, "Boat");
+    @Test
+    public void shouldSaveData() {
+        TestObject result = testedInstance.put(testObject3.getId(), testObject3);
 
-  private TestObject testObject1;
-  private TestObject testObject2;
+        assertNotNull(result);
+    }
 
-  @Before
-  public void init() {
-    testedInstance = new LongMapImpl<>();
-    testObject1 = new TestObject(1L, "Car");
-    testedInstance.put(testObject1.getId(), testObject1);
-    testObject2 = new TestObject(5L, "Bus");
-    testedInstance.put(testObject2.getId(), testObject2);
-  }
+    @Test
+    public void shouldGetSavedData() {
+        testedInstance.put(testObject3.getId(), testObject3);
 
-  @Test
-  public void shouldSaveData() {
-    TestObject response = testedInstance.put(testObject3.getId(), testObject3);
+        assertNotNull(testedInstance.get(testObject3.getId()));
+        assertEquals(testObject3, testedInstance.get(testObject3.getId()));
+    }
 
-    assertNotNull(response);
-  }
+    @Test
+    public void shouldDeleteData() {
 
-  @Test
-  public void shouldGetSavedData() {
-    testedInstance.put(testObject3.getId(), testObject3);
+        assertNotNull(testedInstance.get(testObject2.getId()));
+        assertEquals(testObject2, testedInstance.get(testObject2.getId()));
 
-    assertNotNull(testedInstance.get(testObject3.getId()));
-    assertEquals(testObject3, testedInstance.get(testObject3.getId()));
-  }
+        testedInstance.remove(testObject2.getId());
 
-  @Test
-  public void shouldDeleteData() {
+        assertNull(testedInstance.get(testObject2.getId()));
+    }
 
-    assertNotNull(testedInstance.get(testObject2.getId()));
-    assertEquals(testObject2, testedInstance.get(testObject2.getId()));
+    @Test
+    public void shouldClearData() {
 
-    testedInstance.remove(testObject2.getId());
+        assertNotNull(testedInstance.get(testObject1.getId()));
+        assertNotNull(testedInstance.get(testObject2.getId()));
 
-    assertNull(testedInstance.get(testObject2.getId()));
-  }
+        testedInstance.clear();
 
-  @Test
-  public void shouldClearData() {
+        assertNull(testedInstance.get(testObject1.getId()));
+        assertNull(testedInstance.get(testObject2.getId()));
+    }
 
-    assertNotNull(testedInstance.get(testObject1.getId()));
-    assertNotNull(testedInstance.get(testObject2.getId()));
+    @Test
+    public void shouldCangedSize() {
 
-    testedInstance.clear();
+        assertEquals(2L, testedInstance.size());
 
-    assertNull(testedInstance.get(testObject1.getId()));
-    assertNull(testedInstance.get(testObject2.getId()));
-  }
+        testedInstance.remove(testObject1.getId());
 
-  @Test
-  public void shouldCangeSize() {
+        assertEquals(1L, testedInstance.size());
 
-    assertEquals(2L, testedInstance.size());
+        testedInstance.put(testObject3.getId(), testObject3);
+        testedInstance.put(testObject4.getId(), testObject4);
 
-    testedInstance.remove(testObject1.getId());
+        assertEquals(3L, testedInstance.size());
+    }
 
-    assertEquals(1L, testedInstance.size());
+    @Test
+    public void shouldShowContainsKeyCorrectly() {
 
-    testedInstance.put(testObject3.getId(), testObject3);
-    testedInstance.put(testObject4.getId(), testObject4);
+        assertFalse(testedInstance.containsKey(testObject3.getId()));
 
-    assertEquals(3L, testedInstance.size());
-  }
+        testedInstance.put(testObject3.getId(), testObject3);
 
-  @Test
-  public void shouldShowContainsKeyCorrectly() {
+        assertTrue(testedInstance.containsKey(testObject3.getId()));
 
-    assertFalse(testedInstance.containsKey(testObject3.getId()));
+        testedInstance.remove(testObject3.getId());
 
-    testedInstance.put(testObject3.getId(), testObject3);
+        assertFalse(testedInstance.containsKey(testObject3.getId()));
+    }
 
-    assertTrue(testedInstance.containsKey(testObject3.getId()));
+    @Test
+    public void shouldShowContainsValueCorrectly() {
 
-    testedInstance.remove(testObject3.getId());
+        assertFalse(testedInstance.containsValue(testObject3));
 
-    assertFalse(testedInstance.containsKey(testObject3.getId()));
-  }
+        testedInstance.put(testObject3.getId(), testObject3);
 
-  @Test
-  public void shouldShowContainsValueCorrectly() {
+        assertTrue(testedInstance.containsValue(testObject3));
 
-    assertFalse(testedInstance.containsValue(testObject3));
+        testedInstance.remove(testObject3.getId());
 
-    testedInstance.put(testObject3.getId(), testObject3);
+        assertFalse(testedInstance.containsValue(testObject3));
+    }
 
-    assertTrue(testedInstance.containsValue(testObject3));
+    @Test
+    public void shouldGetKeys() {
+        long[] result = testedInstance.keys();
 
-    testedInstance.remove(testObject3.getId());
+        assertNotNull(result);
+        assertEquals(2, result.length);
+        assertEquals(testObject1.getId(), result[0]);
+        assertEquals(testObject2.getId(), result[1]);
+    }
 
-    assertFalse(testedInstance.containsValue(testObject3));
-  }
+    @Test
+    public void shouldGetValues() {
+        Object[] result = testedInstance.values();
 
-  @Test
-  public void shouldGetKeys() {
+        assertNotNull(result);
+        assertEquals(2, result.length);
+        assertEquals(testObject1, result[0]);
+        assertEquals(testObject2, result[1]);
+    }
 
-    long[] response = testedInstance.keys();
+    @Test
+    public void shouldSnowIsEmpty() {
 
-    assertNotNull(response);
-    assertEquals(2, response.length);
-    assertEquals(testObject1.getId(), response[0]);
-    assertEquals(testObject2.getId(), response[1]);
-  }
+        assertFalse(testedInstance.isEmpty());
 
-  @Test
-  public void shouldGetValues() {
+        testedInstance.remove(testObject1.getId());
+        testedInstance.remove(testObject2.getId());
 
-    Object[] response = testedInstance.values();
+        assertTrue(testedInstance.isEmpty());
 
-    assertNotNull(response);
-    assertEquals(2, response.length);
-    assertEquals(testObject1, response[0]);
-    assertEquals(testObject2, response[1]);
-  }
+        testedInstance.put(testObject3.getId(), testObject3);
 
-  @Test
-  public void shouldSnowIsEmpty() {
+        assertFalse(testedInstance.isEmpty());
+    }
 
-    assertFalse(testedInstance.isEmpty());
+    @Test
+    public void shouldChangeValue() {
 
-    testedInstance.remove(testObject1.getId());
-    testedInstance.remove(testObject2.getId());
+        testedInstance.put(testObject3.getId(), testObject3);
 
-    assertTrue(testedInstance.isEmpty());
+        assertEquals(testObject3,testedInstance.get(testObject3.getId()));
 
-    testedInstance.put(testObject3.getId(), testObject3);
+        testedInstance.put(testObject4.getId(), testObject4);
 
-    assertFalse(testedInstance.isEmpty());
-  }
+        assertEquals(testObject4, testedInstance.get(testObject4.getId()));
+    }
+
+    @Test
+    public void shouldReturnValueWhenRemove() {
+
+        TestObject result1 = testedInstance.remove(testObject2.getId());
+
+        assertEquals(testObject2, result1);
+
+        TestObject result2 = testedInstance.remove(testObject2.getId());
+
+        assertNull(result2);
+    }
 }

@@ -8,11 +8,10 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class LongMapArraysImplTest {
-
-  private LongMap<TestObject> testedInstance;
-
   private TestObject testObject1;
   private TestObject testObject2;
+
+  private LongMap<TestObject> testedInstance;
 
   @Before
   public void init() {
