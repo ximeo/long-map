@@ -12,9 +12,8 @@ import java.util.Objects;
  * and memory usage. Therefore, it can only be considered as an alternative.
  */
 public class LongMapArraysImpl<V> implements LongMap<V> {
-
     private Object[][][] dataStorage = new Object[3][][];
-    private long size = 0L;
+    private long size;
 
     @Override
     public V put(long key, V value) {
@@ -157,7 +156,6 @@ public class LongMapArraysImpl<V> implements LongMap<V> {
     }
 
     private static class ComplexIndex {
-
         private final int firstLevelIndex;
         private final int secondLevelIndex;
         private final int thirdLevelIndex;
